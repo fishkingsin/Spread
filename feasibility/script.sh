@@ -19,37 +19,38 @@ if [ ! -f out.mp4 ]; then
 fi
 
 # add captions
-if [ ! -f video.mp4 ]; then
-  FONTPATH="/System/Library/Fonts/STHeiti\ Medium.ttc"
-  TEXT=("仔細回想一下，當初剛剛把狗狗帶回家的時候" "我們給牠起了名字，然後一遍遍的叫牠" "為了得到牠的應允，我們不惜拿出很多的零食來誘惑牠" "久而久之，狗狗便記住了這個指令" "我們給牠零食時喊牠名字；對牠進行喚回訓練時喊牠名字" "牠犯錯時我們也喊牠名字；甚至教訓牠時我們喊的還是牠名字....." "這個時候狗狗就會很鬱悶，我的這個「名字」到底代表著什麼意思呢" "是表達愛？還是懲罰" "牠不知道你喊的名字對牠來說是好事還是壞事" "在對牠有好處的事情發生時，你可以叫牠的名字" "如果是不好的事情，比如牠犯了錯" "你最好別喊牠名字，這個時候你只需要表達出你很生氣就行了" "這樣一來，狗狗逐漸的就會明白" "「名字」對於牠來說是有好事發生了" "在你喊牠名字的時候，牠就會很快的回應你" )
+# if [ ! -f video.mp4 ]; then
+#   FONTPATH="/System/Library/Fonts/STHeiti\ Medium.ttc"
+#   TEXT=("仔細回想一下，當初剛剛把狗狗帶回家的時候" "我們給牠起了名字，然後一遍遍的叫牠" "為了得到牠的應允，我們不惜拿出很多的零食來誘惑牠" "久而久之，狗狗便記住了這個指令" "我們給牠零食時喊牠名字；對牠進行喚回訓練時喊牠名字" "牠犯錯時我們也喊牠名字；甚至教訓牠時我們喊的還是牠名字....." "這個時候狗狗就會很鬱悶，我的這個「名字」到底代表著什麼意思呢" "是表達愛？還是懲罰" "牠不知道你喊的名字對牠來說是好事還是壞事" "在對牠有好處的事情發生時，你可以叫牠的名字" "如果是不好的事情，比如牠犯了錯" "你最好別喊牠名字，這個時候你只需要表達出你很生氣就行了" "這樣一來，狗狗逐漸的就會明白" "「名字」對於牠來說是有好事發生了" "在你喊牠名字的時候，牠就會很快的回應你" )
 
-  filter=""
-  cnt=1
-  for i in "${TEXT[@]}"
-  do
-    filter="$filter drawtext=enable='between(t,$cnt,$((cnt+=6)))': \
-    fontfile=$FONTPATH: \
-    text='$i': \
-    fontcolor=0xFFFFFFFF: \
-    fontsize=36: \
-    shadowcolor=black: \
-    shadowx=3: \
-    shadowy=2: \
-    x=(w-tw)/2: \
-    y=(h-th)/1.35,"
-  done
-  filter=${filter%?}
-  echo $cnt
-  ffmpeg -i out.mp4 \
-    -vf "[in] \
-    $filter \
-    [out]
-    " \
-    caption.mp4
+#   filter=""
+#   cnt=1
+#   for i in "${TEXT[@]}"
+#   do
+#     filter="$filter drawtext=enable='between(t,$cnt,$((cnt+=6)))': \
+#     fontfile=$FONTPATH: \
+#     text='$i': \
+#     fontcolor=0xFFFFFFFF: \
+#     fontsize=36: \
+#     shadowcolor=black: \
+#     shadowx=3: \
+#     shadowy=2: \
+#     x=(w-tw)/2: \
+#     y=(h-th)/1.35, \
+#     fade=in:7:10 "
+#   done
+#   filter=${filter%?}
+#   echo $cnt
+#   ffmpeg -i out.mp4 \
+#     -vf "[in] \
+#     $filter \
+#     [out]
+#     " \
+#     caption.mp4
 
-  ffmpeg -f concat -i cores -c copy video.mp4
-fi
+#   ffmpeg -f concat -i cores -c copy video.mp4
+# fi
 
-# add audio
-ffmpeg -i video.mp4 -i dog.mp3 -codec copy -shortest spread.mp4
-
+# # add audio
+# ffmpeg -i out.mp4 -i dog.mp3 -codec copy -shortest spread.mp4
+ffmpeg -ss 0 -t 100 -i out.mp4 -i dog.mp3  -vf "subtitles=testing.ass"  spread.mp4
